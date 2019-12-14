@@ -15,10 +15,11 @@
     <application
         android:allowBackup="true"
         android:icon="@mipmap/logo"
-        android:label="What's This"
+        android:label="What&apos;s This"
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".BlankActivity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -26,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GalleryLoader"></activity>
+        <activity android:name=".GalleryLoader" />
     </application>
 
 </manifest>

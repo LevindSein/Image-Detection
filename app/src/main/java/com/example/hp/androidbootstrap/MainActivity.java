@@ -72,10 +72,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private boolean doubleBackToExitPressedOnce = false;
     private Camera cam;
+    private int x = 0;
     private final String TAG = "MYTAG";
     private SurfaceView cameraPreview;
-    private ImageView imgBtn;
-    private ImageView imgBtn2;
+    private ImageView imgBtn, imgBtn2, imgBtn3;
     private volatile Bitmap picture;
     private Camera.PictureCallback cp;
     private File photoFile;
@@ -99,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         cameraPreview.getHolder().addCallback(this);
         imgBtn = (ImageView) findViewById(R.id.processBtn);
         imgBtn2=(ImageView)findViewById(R.id.processBtn2);
+        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
 
@@ -112,6 +113,14 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         config.put("api_key","577464834935689");
         config.put("api_secret","qcgYMhf9gSDYtL-ClgiNaMkAO48");
         MediaManager.init(this,config);
+
+        imgBtn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                x = x + 90;
+                imgBtn3.setRotation(imgBtn.getRotation() + x);
+            }
+        });
 
         imgBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -162,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 } else {
                     Log.d("What happened", "Bitmap is null");
                 }
-
+                imgBtn.setRotation(imgBtn.getRotation() + 90);
                 progressView.setText("Loading . ");
             }
         });
@@ -379,16 +388,17 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             public void run() {
                 restartApp();
             }
-        }, 3000);
+        }, 2000);
     }
 
     private void restartApp() {
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        int mPendingIntentId = 100;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);
+//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//        int mPendingIntentId = 10;
+//        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+//        AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+//        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), mPendingIntent);
+//        System.exit(0);
+        startActivity(new Intent(MainActivity.this,BlankActivity.class));
     }
 }
 
