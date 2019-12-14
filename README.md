@@ -17,3 +17,7 @@ for Learning with AsyncTask
 
 Web scraping on the results ( using JSoup ) to fetch the required image tags.
 
+Please help with another building :
+- switching camera
+- flashlight when taking picture
+
