@@ -1,32 +1,27 @@
 package com.example.hp.androidbootstrap;
 
 import android.Manifest;
-<<<<<<< HEAD
-<<<<<<< HEAD
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.ComponentName;
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.hardware.Camera;
 
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-<<<<<<< HEAD
-<<<<<<< HEAD
 import android.support.v4.content.IntentCompat;
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +33,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,8 +66,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.LogRecord;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback{
 
+    private boolean doubleBackToExitPressedOnce = false;
     private Camera cam;
     private final String TAG = "MYTAG";
     private SurfaceView cameraPreview;
@@ -93,15 +93,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         TypefaceProvider.getRegisteredIconSets();
         askPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
         askPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,STORAGE_REQUEST_CODE);
-<<<<<<< HEAD
-<<<<<<< HEAD
         cam = Camera.open();
-=======
-        cam = Camera.open(0);
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
-        cam = Camera.open(0);
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
         cam.setDisplayOrientation(getCameraDisplayOrientation(0));
         cameraPreview = (SurfaceView) findViewById(R.id.surfaceView);
         cameraPreview.getHolder().addCallback(this);
@@ -110,15 +102,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
 
-<<<<<<< HEAD
-<<<<<<< HEAD
         final Camera.Parameters params = cam.getParameters();
-=======
-        Camera.Parameters params = cam.getParameters();
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
-        Camera.Parameters params = cam.getParameters();
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
         params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
         cam.setParameters(params);
 
@@ -172,29 +156,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-//                Camera cam = Camera.open();
-//                Camera.Parameters p = cam.getParameters();
-//                p.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
-//                cam.setParameters(p);
-//                cam.startPreview();
-<<<<<<< HEAD
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
                 cam.takePicture(null, null, cp);
                 if (picture != null) {
                     Log.d("What happened", "Picture not null");
                 } else {
                     Log.d("What happened", "Bitmap is null");
                 }
+
+                progressView.setText("Loading . ");
             }
         });
-
     }
 
     private void askPermissions(String permission,int requestCode)
@@ -203,20 +174,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         {
             ActivityCompat.requestPermissions(this,new String[]{permission},requestCode);
         }
-<<<<<<< HEAD
-<<<<<<< HEAD
         else {}
-=======
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-        else
-        {
-            Toast.makeText(this,"Izin Akses Kamera Diberikan",Toast.LENGTH_SHORT).show();
-        }
-<<<<<<< HEAD
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
     }
 
     @Override
@@ -323,6 +281,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     public void uploadToCloud()
     {
+        progressView.setText("Loading . . ");
         Transformation tr=new Transformation();
         tr.crop("fit").width(100).angle(90);
         String requestId = MediaManager.get().upload(photoFile.getPath()).preprocess(new ImagePreprocessChain()
@@ -343,7 +302,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             @Override
             public void onSuccess(String requestId, Map resultData) {
                 String cloudURL=resultData.get("url").toString();
-                progressView.setText(cloudURL);
+                progressView.setText("Loading . . .");
                 if(cloudURL!=null)
                 new Scraper().execute(cloudURL);
                 else{
@@ -378,6 +337,15 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("MYTAG",s);
+//            pgsBar.setVisibility(GONE);
+            RelativeLayout.LayoutParams layoutParams =
+                    (RelativeLayout.LayoutParams)   progressView.getLayoutParams();
+            layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
+            progressView.setLayoutParams(layoutParams);
+            progressView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            progressView.setTextSize(50);
+            progressView.setAllCaps(true);
+            progressView.setTypeface(null, Typeface.BOLD);
             progressView.setText(s);
         }
     }
@@ -391,23 +359,36 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     Toast.makeText(this,"Requires permission "+permissions[0],Toast.LENGTH_SHORT).show();
                     finish();
                 }
-        
     }
-<<<<<<< HEAD
-<<<<<<< HEAD
 
     @Override
     public void onBackPressed() {
-//        android.os.Process.killProcess(android.os.Process.myPid());
-        Intent intent = new Intent();
-        cam.stopPreview();
-        cam.release();
-        intent.addCategory(Intent.CATEGORY_HOME);
-        startActivity(intent);
+        if (doubleBackToExitPressedOnce) {
+            Intent intent = new Intent();
+            cam.stopPreview();
+            cam.release();
+            intent.addCategory(Intent.CATEGORY_HOME);
+            startActivity(intent);
+        }
+        this.doubleBackToExitPressedOnce = true;
+        Toast.makeText(this, "Press again to exit", Toast.LENGTH_SHORT).show();
+
+        new Handler().postDelayed(new Runnable() {
+
+            @Override
+            public void run() {
+                restartApp();
+            }
+        }, 3000);
     }
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
+
+    private void restartApp() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        int mPendingIntentId = 100;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);
+    }
 }
 

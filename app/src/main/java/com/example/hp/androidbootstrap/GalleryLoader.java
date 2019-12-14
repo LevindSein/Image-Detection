@@ -2,6 +2,7 @@ package com.example.hp.androidbootstrap;
 
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
@@ -57,6 +58,7 @@ public class GalleryLoader extends AppCompatActivity {
                 if(imageUri!=null) {
                     path = getPathFromURI(imageUri);
                     imageView.setImageURI(imageUri);
+                    textView.setText("Loading .  ");
                     uploadToCloud();
                 }
             }
@@ -102,6 +104,7 @@ public class GalleryLoader extends AppCompatActivity {
     {
         Transformation tr=new Transformation();
         tr.crop("fit").width(100).angle(90);
+        textView.setText("Loading . . ");
         String requestId = MediaManager.get().upload(path).preprocess(new ImagePreprocessChain()
                 .loadWith(new BitmapDecoder(1000, 1000))
                 .addStep(new Limit(1000, 1000))
@@ -120,7 +123,7 @@ public class GalleryLoader extends AppCompatActivity {
             @Override
             public void onSuccess(String requestId, Map resultData) {
                 String cloudURL=resultData.get("url").toString();
-                textView.setText(cloudURL);
+                textView.setText("Loading . . .");
                 if(cloudURL!=null)
                     new Scraper().execute(cloudURL);
                 else{
@@ -155,19 +158,17 @@ public class GalleryLoader extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("MYTAG",s);
+            textView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            textView.setTextSize(50);
+            textView.setAllCaps(true);
+            textView.setTypeface(null, Typeface.BOLD);
             textView.setText(s);
         }
     }
 
 
-<<<<<<< HEAD
-<<<<<<< HEAD
     @Override
     public void onBackPressed() {
         startActivity(new Intent(GalleryLoader.this,MainActivity.class));
     }
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
-=======
->>>>>>> e2cbae9bf3b4e1190b61d9cd03470bcaf2817fbf
 }

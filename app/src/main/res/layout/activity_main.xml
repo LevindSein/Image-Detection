@@ -10,23 +10,18 @@
         android:id="@+id/surfaceView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-
-    <LinearLayout
+    <TextView
+        android:id="@+id/progressView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-        <TextView
-            android:id="@+id/progressView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:fontFamily="@font/cutiveregular"
-            android:textStyle="bold"
-            android:text=""
-            android:textSize="20dp"
-            android:textColor="#FFFFFF"/>
-    </LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:layout_centerInParent="true"
+        android:fontFamily="@font/cutiveregular"
+        android:textStyle="bold"
+        android:text=""
+        android:textSize="20dp"
+        android:textColor="#FFFFFF"/>
 
     <ImageView
         android:id="@+id/processBtn"
