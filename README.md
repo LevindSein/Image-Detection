@@ -1,11 +1,8 @@
-# Reverse-Image-Search
-An App to demonstrate Reverse Image Search 
+Modul Reverse Image Search
 
-Steps involved :
+Modification and Fixing from https://github.com/rahulseetharaman/Reverse-Image-Search
 
-Take photo --> Upload to Cloudinary --> Get Public URL
-
-Using the public URL, do reverse image search using the image search URL.
+for Learning with AsyncTask
 
 Web scraping on the results ( using JSoup ) to fetch the required image tags.
 
