@@ -21,6 +21,4 @@ Please help with another building :
 - switching camera
 - flashlight when taking picture
 
-=================================================
-Levind Sein
-
+========================Levind Sein============================
