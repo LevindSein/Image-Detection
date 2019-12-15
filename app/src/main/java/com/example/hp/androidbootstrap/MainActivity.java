@@ -65,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     private SharedPreferences sp;
     private SharedPreferences.Editor edit;
     private TextView progressView;
+    private  SurfaceHolder surfaceHolder;
     static  final  int CAMERA_REQUEST_CODE=1;
     static  final  int STORAGE_REQUEST_CODE=2;
 
@@ -76,19 +77,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         TypefaceProvider.getRegisteredIconSets();
         askPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
         askPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,STORAGE_REQUEST_CODE);
-        cam = Camera.open();
+        cam = Camera.open(0);
         cam.setDisplayOrientation(getCameraDisplayOrientation(0));
         cameraPreview = (SurfaceView) findViewById(R.id.surfaceView);
         cameraPreview.getHolder().addCallback(this);
         imgBtn = (ImageView) findViewById(R.id.processBtn);
         imgBtn2=(ImageView)findViewById(R.id.processBtn2);
-        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
+//        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
 
-        final Camera.Parameters params = cam.getParameters();
-        params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
-        cam.setParameters(params);
 
         edit=sp.edit();
         Map config=new HashMap();
@@ -97,11 +95,21 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         config.put("api_secret","qcgYMhf9gSDYtL-ClgiNaMkAO48");
         MediaManager.init(this,config);
 
-        imgBtn3.setOnClickListener(new View.OnClickListener() {
+//        imgBtn3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                x = x + 90;
+//                imgBtn3.setRotation(imgBtn.getRotation() + x);
+//            }
+//        });
+
+        cameraPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                x = x + 90;
-                imgBtn3.setRotation(imgBtn.getRotation() + x);
+                //Camera Focus
+                final Camera.Parameters params = cam.getParameters();
+                params.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                cam.setParameters(params);
             }
         });
 
@@ -112,6 +120,19 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         });
 
+        imgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cam.takePicture(null, null, cp);
+                if (picture != null) {
+                    Log.d("What happened", "Picture not null");
+                } else {
+                    Log.d("What happened", "Bitmap is null");
+                }
+                imgBtn.setRotation(imgBtn.getRotation() + 90);
+                progressView.setText("Loading . ");
+            }
+        });
         cp = new Camera.PictureCallback()
         {
             @Override
@@ -137,27 +158,9 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                 } catch (Exception e) {
                     Log.d("TAG", e.toString());
                 }
-
                 uploadToCloud();
             }
-
-
         };
-
-
-        imgBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cam.takePicture(null, null, cp);
-                if (picture != null) {
-                    Log.d("What happened", "Picture not null");
-                } else {
-                    Log.d("What happened", "Bitmap is null");
-                }
-                imgBtn.setRotation(imgBtn.getRotation() + 90);
-                progressView.setText("Loading . ");
-            }
-        });
     }
 
     private void askPermissions(String permission,int requestCode)
