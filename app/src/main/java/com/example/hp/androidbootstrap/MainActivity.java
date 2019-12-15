@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 
@@ -55,13 +56,13 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     private boolean doubleBackToExitPressedOnce = false;
     private Camera cam;
-    private int x = 0;
     private final String TAG = "MYTAG";
     private SurfaceView cameraPreview;
-    private ImageView imgBtn, imgBtn2, imgBtn3;
+    private ImageView imgBtn, imgBtn2, flashBtn, imgBtn3;
     private volatile Bitmap picture;
     private Camera.PictureCallback cp;
     private File photoFile;
+    int j = 0;
     private SharedPreferences sp;
     private SharedPreferences.Editor edit;
     private TextView progressView;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
         TypefaceProvider.getRegisteredIconSets();
         askPermissions(Manifest.permission.CAMERA,CAMERA_REQUEST_CODE);
         askPermissions(Manifest.permission.WRITE_EXTERNAL_STORAGE,STORAGE_REQUEST_CODE);
@@ -83,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         cameraPreview.getHolder().addCallback(this);
         imgBtn = (ImageView) findViewById(R.id.processBtn);
         imgBtn2=(ImageView)findViewById(R.id.processBtn2);
+        flashBtn=(ImageView)findViewById(R.id.flash);
 //        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
@@ -95,14 +98,24 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         config.put("api_secret","qcgYMhf9gSDYtL-ClgiNaMkAO48");
         MediaManager.init(this,config);
 
-//        imgBtn3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                x = x + 90;
-//                imgBtn3.setRotation(imgBtn.getRotation() + x);
-//            }
-//        });
+        //Flashlight
+        flashBtn.setOnClickListener(new View.OnClickListener() {
+            int i = 1;
+            @Override
+            public void onClick(View v) {
+                if(i %2 == 1){
+                    flashBtn.setImageResource(R.drawable.flash_blue);
+                    j= 1;
+                }
+                else{
+                    flashBtn.setImageResource(R.drawable.flash);
+                    j= 0;
+                }
+                i++;
+            }
+        });
 
+        //Focusing Camera
         cameraPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -113,6 +126,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         });
 
+        //Switching Camera
+//        imgBtn3.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                x = x + 90;
+//                imgBtn3.setRotation(imgBtn.getRotation() + x);
+//            }
+//        });
+
+        //Load to Gallery
         imgBtn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -120,17 +143,30 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         });
 
+        final Camera.Parameters params = cam.getParameters();
+        //Take a Picture
         imgBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                cam.takePicture(null, null, cp);
-                if (picture != null) {
-                    Log.d("What happened", "Picture not null");
-                } else {
-                    Log.d("What happened", "Bitmap is null");
+                if(j == 1){
+                    params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                    cam.setParameters(params);
                 }
+                final Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        cam.takePicture(null, null, cp);
+                        if (picture != null) {
+                            Log.d("What happened", "Picture not null");
+                        } else {
+                            Log.d("What happened", "Bitmap is null");
+                        }
+                        cam.setParameters(params);
+                    }
+                }, 800);
                 imgBtn.setRotation(imgBtn.getRotation() + 90);
-                progressView.setText("Loading . ");
+                progressView.setText("Hold Camera");
             }
         });
         cp = new Camera.PictureCallback()
@@ -276,6 +312,10 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
 
     public void uploadToCloud()
     {
+        if(j == 1){
+            cam.stopPreview();
+            cam.release();
+        }
         progressView.setText("Loading . . ");
         Transformation tr=new Transformation();
         tr.crop("fit").width(100).angle(90);
