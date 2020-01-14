@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3cb4c5</color>
-    <color name="colorPrimaryDark">#3cb4c5</color>
-    <color name="colorAccent">#3cb4c5</color>
+    <color name="colorPrimary">#88129b</color>
+    <color name="colorPrimaryDark">#88129b</color>
+    <color name="colorAccent">#88129b</color>
+    <color name="kotakAbu">#e5e5e5</color>
+    <color name="buletAbu">#c4c4c4</color>
     <color name="white">#ffffff</color>
 </resources>

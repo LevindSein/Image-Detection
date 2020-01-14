@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         cameraPreview.getHolder().addCallback(this);
         imgBtn = (ImageView) findViewById(R.id.processBtn);
         imgBtn2=(ImageView)findViewById(R.id.processBtn2);
-        flashBtn=(ImageView)findViewById(R.id.flash);
+        flashBtn=(ImageView)findViewById(R.id.flashku);
 //        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
@@ -104,11 +104,11 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             @Override
             public void onClick(View v) {
                 if(i %2 == 1){
-                    flashBtn.setImageResource(R.drawable.flash_blue);
+                    flashBtn.setImageResource(R.drawable.flashlightungu);
                     j= 1;
                 }
                 else{
-                    flashBtn.setImageResource(R.drawable.flash);
+                    flashBtn.setImageResource(R.drawable.flashlightwhite);
                     j= 0;
                 }
                 i++;
@@ -165,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         cam.setParameters(params);
                     }
                 }, 800);
-                imgBtn.setRotation(imgBtn.getRotation() + 90);
+                imgBtn.setImageResource(R.drawable.shootbtnchange);
                 progressView.setText("Hold Camera");
             }
         });
@@ -377,7 +377,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     (RelativeLayout.LayoutParams)   progressView.getLayoutParams();
             layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT, 0);
             progressView.setLayoutParams(layoutParams);
-            progressView.setTextColor(getResources().getColor(R.color.colorPrimary));
+            progressView.setTextColor(getResources().getColor(R.color.white));
             progressView.setTextSize(50);
             progressView.setAllCaps(true);
             progressView.setTypeface(null, Typeface.BOLD);
