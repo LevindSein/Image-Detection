@@ -158,7 +158,7 @@ public class GalleryLoader extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Log.d("MYTAG",s);
-            textView.setTextColor(getResources().getColor(R.color.white));
+            textView.setTextColor(getResources().getColor(R.color.black));
             textView.setTextSize(50);
             textView.setAllCaps(true);
             textView.setTypeface(null, Typeface.BOLD);

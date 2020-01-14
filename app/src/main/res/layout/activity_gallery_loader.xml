@@ -11,14 +11,13 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
         android:layout_gravity="center"
-        android:alpha="0.7"
         android:layout_marginTop="25dp"
         android:paddingRight="20dp"
         android:paddingLeft="20dp"
-        app:srcCompat="@drawable/block" />
+        app:srcCompat="@mipmap/ic_oops" />
 
     <TextView
         android:id="@+id/textView"

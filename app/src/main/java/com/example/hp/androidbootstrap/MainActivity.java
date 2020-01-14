@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                         cam.setParameters(params);
                     }
                 }, 800);
-                imgBtn.setImageResource(R.drawable.shootbtnchange);
                 progressView.setText("Hold Camera");
             }
         });
