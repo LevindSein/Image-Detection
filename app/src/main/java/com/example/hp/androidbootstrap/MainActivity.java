@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.hardware.Camera;
 
@@ -52,6 +51,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import static android.hardware.Camera.open;
+
 public class MainActivity extends AppCompatActivity implements SurfaceHolder.Callback{
 
     private boolean doubleBackToExitPressedOnce = false;
@@ -83,16 +84,16 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         cam.setDisplayOrientation(getCameraDisplayOrientation(0));
         cameraPreview = (SurfaceView) findViewById(R.id.surfaceView);
         cameraPreview.getHolder().addCallback(this);
-        imgBtn = (ImageView) findViewById(R.id.processBtn);
+        imgBtn = (ImageView) findViewById(R.id.logo_shootcam);
         imgBtn2=(ImageView)findViewById(R.id.processBtn2);
         flashBtn=(ImageView)findViewById(R.id.flashku);
 //        imgBtn3=(ImageView)findViewById(R.id.rotateBtn);
         progressView = (TextView) findViewById(R.id.progressView);
         sp=getSharedPreferences("MYSP",MODE_MULTI_PROCESS);
 
-
+// Capture image (From Camera or Gallery) (96-98)
         edit=sp.edit();
-        Map config=new HashMap();
+        Map config=new HashMap(); //kemudian gambar di Upload ke Cloud.. mendapatkan public URL
         config.put("cloud_name","rahulseetharaman");
         config.put("api_key","577464834935689");
         config.put("api_secret","qcgYMhf9gSDYtL-ClgiNaMkAO48");
@@ -126,14 +127,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
             }
         });
 
-        //Switching Camera
-//        imgBtn3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                x = x + 90;
-//                imgBtn3.setRotation(imgBtn.getRotation() + x);
-//            }
-//        });
 
         //Load to Gallery
         imgBtn2.setOnClickListener(new View.OnClickListener() {
@@ -296,19 +289,24 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
         connect.userAgent("Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/535.21 (KHTML, like Gecko) Chrome/19.0.1042.0 Safari/535.21");
         connect.timeout(30000);
         try
+   // Gambar di reverse menggunakan search by image google
+        //google by image + public URL tadi
         {
             Document document=connect.get();
             Element div=document.getElementsByClass("r5a77d").get(0);
             final String answer=div.getElementsByTag("a").get(0).text();
             return answer;
         }
+// hasil scrappingnya di fetch menggunakan Jsoup.. disitulah dapat kesimpulan dari tagging hasil gambar yang cocok
+
         catch (Exception e)
         {
             e.printStackTrace();
         }
         return "nothing";
     }
-
+   // Gambar di upload ke Cloud, melalui API yang telah d buat
+   //dimana gambar di transformasi terlebih dahulu, ukuran dan resolusinya
     public void uploadToCloud()
     {
         if(j == 1){
@@ -343,7 +341,7 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
                     Log.d("MYTAG","URL is null");
                 }
             }
-
+// data pencarian di google d scrap
             @Override
             public void onError(String requestId, ErrorInfo error) {
                 Log.d("MYTAG",error.getDescription());
@@ -417,12 +415,6 @@ public class MainActivity extends AppCompatActivity implements SurfaceHolder.Cal
     }
 
     private void restartApp() {
-//        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//        int mPendingIntentId = 10;
-//        PendingIntent mPendingIntent = PendingIntent.getActivity(getApplicationContext(), mPendingIntentId, intent, PendingIntent.FLAG_CANCEL_CURRENT);
-//        AlarmManager mgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-//        mgr.set(AlarmManager.RTC, System.currentTimeMillis(), mPendingIntent);
-//        System.exit(0);
         startActivity(new Intent(MainActivity.this,BlankActivity.class));
     }
 }
